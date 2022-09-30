@@ -20,7 +20,7 @@ class App extends React.Component {
       data: [
         {
           name: "John6 M.",
-          salary: 1000,
+          salary: 1100,
           key: "as5",
           increase: false,
           rise: false,
@@ -40,6 +40,8 @@ class App extends React.Component {
           rise: false,
         },
       ],
+      term: "",
+      filter: "all",
     };
   }
   delateEmployee = (id) => {
@@ -52,14 +54,11 @@ class App extends React.Component {
     }));
   };
 
-  addNewEmployee = (name, selary) => {
-    // e.preventDefault();
-
-    // let {name, selary} = state;
-    if (name !== "" && name !== " " && selary > 0) {
+  addNewEmployee = (name, salary) => {
+    if (name !== "" && name !== " " && salary > 0) {
       const newEmployee = {
         name: name,
-        selary: selary,
+        salary: salary,
         increase: false,
         rise: false,
         key: String(Math.random()),
@@ -82,26 +81,46 @@ class App extends React.Component {
     }));
   };
 
-  // onToggleRise = (id) => {
-  //   // let newData = this.state.data.map((item) => {
-  //   //   if (item.key === id) {
-  //   //     return {...item, rise: !item.rise};
-  //   //   }
-  //   //   return item;
-  //   // });
+  filterData = (item, term) => {
+    return item.filter((el) => {
+      return el.name.toLowerCase().includes(term.toLowerCase());
+    });
+  };
 
-  //   this.setState(({data}) => ({
-  //     data: data.map((item) => {
-  //       if (item.key === id) {
-  //         return {...item, rise: !item.rise};
-  //       }
-  //       return item;
-  //     }),
-  //   }));
-  // };
+  filterItem = (item, filter, term) => {
+    switch (filter) {
+      case "enhance":
+        return item.filter((el) => el.rise);
+      case "salery":
+        return item.filter((el) => el.salary >= 1000);
+      default:
+        return this.filterData(item, term);
+    }
+  };
+  searchEmployees = (item, term, filter) => {
+    if (term.length <= 0 && filter.length <= 0) {
+      return item;
+    }
+    if (term === "") {
+      return this.filterItem(item, filter, term);
+    } else {
+      const filterItem = this.filterItem(item, filter, term);
+      return this.filterData(filterItem, term);
+    }
+  };
+
+  onUpdateFilter = (filter) => {
+    this.setState({filter});
+  };
+
+  onUpdateSearch = (term) => {
+    this.setState({term});
+  };
 
   render() {
-    let {data} = this.state;
+    const {data, term, filter} = this.state;
+    const visibleData = this.searchEmployees(data, term, filter);
+
     return (
       <div className="app">
         <AppInfo
@@ -110,12 +129,12 @@ class App extends React.Component {
         />
 
         <div className="search-panel">
-          <SearchPanel />
-          <AppFilter />
+          <SearchPanel onSearch={this.onUpdateSearch} />
+          <AppFilter onFilter={this.onUpdateFilter} filter={filter} />
         </div>
 
         <EmployeesList
-          data={data}
+          data={visibleData}
           onDelate={this.delateEmployee}
           onToggleProp={this.onToggleProp}
         />
