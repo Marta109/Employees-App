@@ -7,6 +7,7 @@ const EmployeesListItem = ({
   rise,
   increase,
   onDelate,
+  onChangeSalary,
   onToggleProp,
 }) => {
   let clazName = "list-group-item d-flex justify-content-between ";
@@ -17,6 +18,11 @@ const EmployeesListItem = ({
     clazName += " like";
   }
 
+  const chageSalary = (e) => {
+    if (e.target.value) {
+      onChangeSalary(name, e.target.value);
+    }
+  };
   return (
     <li className={clazName}>
       <span
@@ -29,6 +35,7 @@ const EmployeesListItem = ({
         type="text"
         className="list-group-item-input"
         defaultValue={`${salary} $`}
+        onChange={chageSalary}
       />
       <div className="d-flex justify-content-center align-items-center">
         <button

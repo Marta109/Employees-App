@@ -117,6 +117,22 @@ class App extends React.Component {
     this.setState({term});
   };
 
+  onChangeSalary = (name, newSalary) => {
+    newSalary = parseInt(newSalary);
+    if (!newSalary) {
+      return null;
+    }
+
+    this.setState(({data}) => ({
+      data: data.map((el) => {
+        if (el.name === name) {
+          return {...el, salary: newSalary};
+        }
+        return el;
+      }),
+    }));
+  };
+
   render() {
     const {data, term, filter} = this.state;
     const visibleData = this.searchEmployees(data, term, filter);
@@ -137,6 +153,7 @@ class App extends React.Component {
           data={visibleData}
           onDelate={this.delateEmployee}
           onToggleProp={this.onToggleProp}
+          onChangeSalary={this.onChangeSalary}
         />
         <EmployeesAddForm onAdd={this.addNewEmployee} />
       </div>
