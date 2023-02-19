@@ -55,7 +55,7 @@ class App extends React.Component {
   };
 
   addNewEmployee = (name, salary) => {
-    if (name !== "" && name !== " " && salary > 0) {
+    if (name !== "" && salary > 0) {
       const newEmployee = {
         name: name,
         salary: salary,
